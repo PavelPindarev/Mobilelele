@@ -1,15 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <title>MobiLeLeLe</title>
-    <link rel="stylesheet" href="/css/reset-css.css"/>
-    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
-    <script src="/js/jquery-3.5.1.slim.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-</head>
+<head th:replace="fragments/navbar::head"></head>
 
 <body>
 
@@ -17,42 +10,47 @@
 
 <div class="container-fluid">
     <h2 class="text-center text-white mt-5">Details</h2>
-    <div class="offers row mx-auto d-flex flex-row justify-content-center">
-        <div
-                class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">
+    <div th:object="${offer}"
+         class="offers row mx-auto d-flex flex-row justify-content-center">
+        <div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">
 
             <div class="card-body pb-1">
                 <h5 class="card-title"
-                    th:text="*{offer.brand} + ' '  + *{offer.model} + ' '  + *{offer.year}">
+                    th:text="*{brand} + ' '  + *{model} + ' '  + *{year}">
                     Offer year Brand name Model name
                 </h5>
             </div>
+
             <ul class="offer-details list-group list-group-flush">
                 <li class="list-group-item">
-                    <div class="card-text">Mileage: <span th:text="*{offer.mileage}"></span></div>
-                    <div class="card-text">Price: <span th:text="*{offer.price}"></span></div>
-                    <div class="card-text">Engine: <span th:text="*{offer.engine}"></span></div>
-                    <div class="card-text">Transmission type: <span th:text="*{offer.transmission}"></span></div>
-                    <div class="card-text">Offer created: <span th:text="*{offer.created}"></span></div>
-                    <div class="card-text">Offer modified: <span th:text="*{offer.modified}"></span></div>
-                    <div class="card-text"><span th:text="*{offer.seller}">Seller - First and Last name</span></div>
+                    <div class="card-text">Mileage: <span th:text="*{mileage}"></span></div>
+                    <div class="card-text">Price: <span th:text="*{price}"></span></div>
+                    <div class="card-text">Engine: <span th:text="*{engine}"></span></div>
+                    <div class="card-text">Transmission type: <span th:text="*{transmission}"></span></div>
+                    <div class="card-text">Offer created: <span th:text="*{created}"></span></div>
+                    <div class="card-text">Offer modified: <span th:text="*{modified}"></span></div>
+                    <div class="card-text"><span th:text="*{seller}">Seller - First and Last name</span></div>
                 </li>
             </ul>
+
             <div class="card-body">
                 <div class="row">
-                    <form th:action="@{/offers/{id} (id = *{offer.id})}" th:method="update">
-                        <input type="button" class="btn btn-link" value="Update"/>
+                    <form th:action="@{/offers/{id}/update (id = *{id})}" th:method="get">
+                        <input type="submit" class="btn btn-link" value="Update"/>
                     </form>
 
-                <form th:action="@{/offers/{id} (id = *{offer.id})}" th:method="delete">
-                    <input type="submit" class="btn btn-link" value="Delete"/>
-                </form>
+                    <form th:action="@{/offers/{id} (id = *{id})}" th:method="delete">
+                        <input type="submit" class="btn btn-link" value="Delete"/>
+                    </form>
                 </div>
             </div>
+
         </div>
+
         <div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">
-            <img th:src="*{offer.imageUrl}" class="card-img-top" alt="Car image">
+            <img th:src="*{imageUrl}" class="card-img-top" alt="Car image">
         </div>
+
     </div>
 </div>
 

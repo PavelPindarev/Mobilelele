@@ -1,24 +1,28 @@
 package com.example.mobilelele.web;
 
+import com.example.mobilelele.model.dto.binding.OfferUpdateBindingModel;
+import com.example.mobilelele.model.dto.service.OfferUpdateServiceModel;
 import com.example.mobilelele.model.dto.view.OfferSummaryView;
+import com.example.mobilelele.model.entity.enums.EngineType;
+import com.example.mobilelele.model.entity.enums.TransmissionType;
 import com.example.mobilelele.service.OfferService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/offers")
 public class OfferController {
 
     private final OfferService offerService;
+    private final ModelMapper mapper;
 
     @Autowired
-    public OfferController(OfferService offerService) {
+    public OfferController(OfferService offerService, ModelMapper mapper) {
         this.offerService = offerService;
+        this.mapper = mapper;
     }
 
     @GetMapping("/all")
@@ -39,10 +43,34 @@ public class OfferController {
         return "details";
     }
 
+    //DELETE
     @DeleteMapping("/{id}")
     private String deleteOffer(@PathVariable Long id) {
         offerService.deleteOffer(id);
 
         return "redirect:/offers/all";
     }
+
+    //UPDATE
+    @GetMapping("/{id}/update")
+    public String updateOffer(@PathVariable Long id, Model model) {
+        OfferUpdateBindingModel updateBindingModel = mapper
+                .map(offerService.getOfferById(id), OfferUpdateBindingModel.class);
+
+        model.addAttribute("offerModel", updateBindingModel)
+                .addAttribute("engines", EngineType.values())
+                .addAttribute("transmissions", TransmissionType.values());
+        return "update";
+    }
+
+    @PatchMapping("/{id}/update")
+    public String updateOffer(@PathVariable Long id,
+                              OfferUpdateBindingModel bindingModel) {
+
+        offerService.updateOffer(mapper.map(bindingModel, OfferUpdateServiceModel.class));
+
+        return "redirect:/offers/" + id + "/details";
+    }
+
+
 }

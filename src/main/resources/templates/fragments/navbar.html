@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:fragment="head">
     <meta charset="UTF-8">
-    <title>Navbar</title>
+    <title>MobiLeLeLe</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -45,7 +50,7 @@
                         <div class="logged-user"
                              th:text="|Welcome, ${@currentUser.getFirstName()}|">
                         </div>
-                            <a class="nav-link" href="/users/logout">Logout</a>
+                        <a class="nav-link" href="/users/logout">Logout</a>
                     </div>
                 </li>
 

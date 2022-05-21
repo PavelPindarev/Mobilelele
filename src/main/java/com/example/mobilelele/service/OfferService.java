@@ -1,5 +1,6 @@
 package com.example.mobilelele.service;
 
+import com.example.mobilelele.model.dto.service.OfferUpdateServiceModel;
 import com.example.mobilelele.model.dto.view.OfferSummaryView;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface OfferService {
     OfferSummaryView getOfferById(Long id);
 
     void deleteOffer(Long id);
+
+    void updateOffer(OfferUpdateServiceModel updateServiceModel);
 }
