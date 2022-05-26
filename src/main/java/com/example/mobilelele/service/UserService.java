@@ -5,7 +5,7 @@ import com.example.mobilelele.model.dto.service.UserRegisterServiceModel;
 
 public interface UserService {
 
-    boolean login(UserLoginServiceModel userLoginServiceModel);
+    void login(UserLoginServiceModel userLoginServiceModel);
 
     void logout();
 
@@ -14,4 +14,6 @@ public interface UserService {
     boolean isUsernameFree(String username);
 
     void initializeUsersAndRoles();
+
+    boolean passwordsCheck(UserLoginServiceModel loginServiceModel);
 }

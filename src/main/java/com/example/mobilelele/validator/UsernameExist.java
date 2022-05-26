@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueUsernameValidator.class)
-public @interface UniqueUsername {
+@Constraint(validatedBy = UsernameExistValidator.class)
+public @interface UsernameExist {
 
-    String message() default "Username is not unique";
+    String message() default "Username is don't exist";
 
     Class<?>[] groups() default {};
 

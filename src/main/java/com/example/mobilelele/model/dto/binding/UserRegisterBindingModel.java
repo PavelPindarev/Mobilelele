@@ -1,10 +1,11 @@
 package com.example.mobilelele.model.dto.binding;
 
+import com.example.mobilelele.validator.PasswordMatcher;
 import com.example.mobilelele.validator.UniqueUsername;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+@PasswordMatcher
 public class UserRegisterBindingModel {
 
     @NotNull
@@ -15,11 +16,16 @@ public class UserRegisterBindingModel {
     @Size(min = 4, max = 20)
     private String lastName;
 
+    @NotNull
     @UniqueUsername
     private String username;
 
+    @NotNull
+    @Size(min = 4, max = 20)
     private String password;
 
+    @NotNull
+    @Size(min = 4, max = 20)
     private String confirmPassword;
 
     public String getFirstName() {

@@ -79,26 +79,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean login(UserLoginServiceModel userLoginServiceModel) {
+    public void login(UserLoginServiceModel userLoginServiceModel) {
         Optional<User> optUser =
                 userRepository.findByUsername(userLoginServiceModel.getUsername());
 
         if (optUser.isEmpty()) {
             logout();
-            return false;
         } else {
             User user = optUser.get();
-            boolean matchesSuccessful = passwordEncoder.matches(
-                    userLoginServiceModel.getPassword(),
-                    user.getPassword());
-
-            if (matchesSuccessful) {
-                login(user);
-                user.getRoles().forEach(r -> currentUser.addRole(r.getRole()));
-            }
-
-            return matchesSuccessful;
+            login(user);
+            user.getRoles().forEach(r -> currentUser.addRole(r.getRole()));
         }
+
     }
 
 
@@ -124,6 +116,17 @@ public class UserServiceImpl implements UserService {
     public boolean isUsernameFree(String username) {
         Optional<User> optUser = userRepository.findByUsername(username);
         return optUser.isEmpty();
+    }
+
+    @Override
+    public boolean passwordsCheck(UserLoginServiceModel loginServiceModel) {
+        Optional<User> optUser =
+                userRepository.findByUsername(loginServiceModel.getUsername());
+
+        if (optUser.isEmpty()) return false;
+        User user = optUser.get();
+
+        return passwordEncoder.matches(loginServiceModel.getPassword(), user.getPassword());
     }
 
 

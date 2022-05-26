@@ -1,5 +1,6 @@
 package com.example.mobilelele.validator;
 
+
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.ElementType;
@@ -7,12 +8,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueUsernameValidator.class)
-public @interface UniqueUsername {
+@Constraint(validatedBy = PasswordValidator.class)
+public @interface PasswordMatcher {
 
-    String message() default "Username is not unique";
+    String message() default "Password don't match";
 
     Class<?>[] groups() default {};
 
