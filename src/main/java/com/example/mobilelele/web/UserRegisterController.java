@@ -54,15 +54,7 @@ public class UserRegisterController {
         UserRegisterServiceModel serviceModel =
                 mapper.map(userModel, UserRegisterServiceModel.class);
 
-
-        if (!userService.isUsernameFree(serviceModel.getUsername())) {
-            redirectAttributes.addFlashAttribute("userModel", userModel);
-            redirectAttributes.addFlashAttribute("userNameOccupied", true);
-
-            return "redirect:/users/register";
-        } else {
-            userService.register(serviceModel);
-        }
+        userService.register(serviceModel);
 
         return "redirect:/";
 

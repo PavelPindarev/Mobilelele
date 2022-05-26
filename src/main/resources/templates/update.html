@@ -20,24 +20,24 @@
                 <label for="price" class="text-white font-weight-bold">Price</label>
                 <input id="price"
                        th:field="*{price}"
-                       th:error-class="is-invalid"
+                       th:errorclass="is-invalid"
                        type="number"
-                       step="100" class="form-control"
+                       class="form-control"
                        placeholder="Suggested price"/>
                 <p class="invalid-feedback errors alert alert-danger">
-                    Suggested price is required.
+                    Suggested price is required and should be more than 100 BGN.
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label for="mileage" class="text-white font-weight-bold">Mileage</label>
                 <input id="mileage"
                        th:field="*{mileage}"
-                       th:error-class="is-invalid"
-                       type="number" step="1000"
+                       th:errorclass="is-invalid"
+                       type="number"
                        class="form-control"
                        placeholder="Mileage in kilometers"/>
                 <p class="invalid-feedback errors alert alert-danger">
-                    Mileage in kilometers is required.
+                    Mileage in kilometers is required and should be positive number.
                 </p>
             </div>
         </div>
@@ -45,7 +45,7 @@
             <div class="form-group col-md-6 mb-3">
                 <label class="text-center text-white font-weight-bold" for="engine">Engine</label>
                 <select id="engine" name="engine"
-                        th:error-class="is-invalid"
+                        th:errorclass="is-invalid"
                         class="form-control">
                     <option
                             th:each="anEngine : ${engines}"
@@ -62,7 +62,7 @@
             <div class="form-group col-md-6 mb-3">
                 <label class="text-center text-white font-weight-bold" for="transmission">Transmission</label>
                 <select id="transmission" name="transmission"
-                        th:error-class="is-invalid"
+                        th:errorclass="is-invalid"
                         class="form-control">
                     <option
                             th:each="trans : ${transmissions}"
@@ -82,11 +82,11 @@
                 <label for="year" class="text-white font-weight-bold">Year</label>
                 <input id="year" type="number"
                        th:field="*{year}"
-                       th:error-class="is-invalid"
-                       min="1900" max="2099" step="1" class="form-control"
+                       th:errorclass="is-invalid"
+                       class="form-control"
                        placeholder="Manufacturing year"/>
                 <p class="invalid-feedback errors alert alert-danger">
-                    Manufacturing year is required.
+                    Manufacturing year is required and should be after 1930.
                 </p>
             </div>
         </div>
@@ -95,7 +95,7 @@
             <label class="text-white font-weight-bold" for="description">Description</label>
             <textarea id="description" type="textarea"
                       th:field="*{description}"
-                      th:error-class="is-invalid"
+                      th:errorclass="is-invalid"
                       class="form-control" rows="3"
                       placeholder="Description"></textarea>
             <p class="invalid-feedback errors alert alert-danger">
@@ -106,7 +106,7 @@
             <label class="text-white font-weight-bold" for="imageUrl">Image URL</label>
             <input id="imageUrl" type="url"
                    th:field="*{imageUrl}"
-                   th:error-class="is-invalid"
+                   th:errorclass="is-invalid"
                    class="form-control"
                    placeholder="Put vehicle image URL here">
             <p class="invalid-feedback errors alert alert-danger">

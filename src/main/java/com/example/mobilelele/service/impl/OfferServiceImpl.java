@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -100,10 +101,14 @@ public class OfferServiceImpl implements OfferService {
     }
 
     private Offer setOffer(Offer offer, OfferUpdateServiceModel serviceModel) {
-        return offer.setPrice(serviceModel.getPrice()).setDescription(serviceModel.getDescription())
-                .setMileage(serviceModel.getMileage()).setEngine(serviceModel.getEngine())
-                .setTransmission(serviceModel.getTransmission()).setYear(serviceModel.getYear())
-                .setImageUrl(serviceModel.getImageUrl());
+        return (Offer) offer.setPrice(serviceModel.getPrice())
+                .setDescription(serviceModel.getDescription())
+                .setMileage(serviceModel.getMileage())
+                .setEngine(serviceModel.getEngine())
+                .setTransmission(serviceModel.getTransmission())
+                .setYear(serviceModel.getYear())
+                .setImageUrl(serviceModel.getImageUrl())
+                .setModified(Instant.now());
     }
 
     private OfferSummaryView map(Offer offer) {

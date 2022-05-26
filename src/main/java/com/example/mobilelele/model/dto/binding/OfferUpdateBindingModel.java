@@ -3,25 +3,35 @@ package com.example.mobilelele.model.dto.binding;
 import com.example.mobilelele.model.entity.enums.EngineType;
 import com.example.mobilelele.model.entity.enums.TransmissionType;
 
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 public class OfferUpdateBindingModel {
     private Long id;
 
-    private String description;
+    @NotNull
+    @PositiveOrZero
+    private Double mileage;
 
-    private EngineType engine;
-
-    private String imageUrl;
-
-    private double mileage;
-
+    @NotNull
+    @Min(100)
     private BigDecimal price;
 
+    @NotNull
+    @Min(1930)
+    private Integer year;
+
+    @NotBlank
+    private String description;
+
+    @NotNull
+    private EngineType engine;
+
+    @NotNull
     private TransmissionType transmission;
 
-    private int year;
-
+    @NotBlank
+    private String imageUrl;
 
     public Long getId() {
         return id;
@@ -59,11 +69,11 @@ public class OfferUpdateBindingModel {
         return this;
     }
 
-    public double getMileage() {
+    public Double getMileage() {
         return mileage;
     }
 
-    public OfferUpdateBindingModel setMileage(double mileage) {
+    public OfferUpdateBindingModel setMileage(Double mileage) {
         this.mileage = mileage;
         return this;
     }
@@ -86,13 +96,12 @@ public class OfferUpdateBindingModel {
         return this;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public OfferUpdateBindingModel setYear(int year) {
+    public OfferUpdateBindingModel setYear(Integer year) {
         this.year = year;
         return this;
     }
-
 }

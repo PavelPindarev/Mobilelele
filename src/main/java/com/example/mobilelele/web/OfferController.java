@@ -10,7 +10,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/offers")
@@ -63,11 +67,26 @@ public class OfferController {
         return "update";
     }
 
+    @GetMapping("/{id}/update/errors")
+    public String updateOfferErrors(@PathVariable Long id, Model model) {
+        model.addAttribute("engines", EngineType.values())
+                .addAttribute("transmissions", TransmissionType.values());
+        return "update";
+    }
+
     @PatchMapping("/{id}/update")
     public String updateOffer(@PathVariable Long id,
-                              OfferUpdateBindingModel bindingModel) {
+                              @Valid OfferUpdateBindingModel offerModel,
+                              BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes) {
 
-        offerService.updateOffer(mapper.map(bindingModel, OfferUpdateServiceModel.class));
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("offerModel", offerModel)
+                    .addFlashAttribute("org.springframework.validation.BindingResult.offerModel", bindingResult);
+
+            return "redirect:/offers/" + id + "/update/errors";
+        }
+        offerService.updateOffer(mapper.map(offerModel, OfferUpdateServiceModel.class));
 
         return "redirect:/offers/" + id + "/details";
     }

@@ -1,5 +1,7 @@
 package com.example.mobilelele.model.dto.binding;
 
+import com.example.mobilelele.validator.UniqueUsername;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -13,6 +15,7 @@ public class UserRegisterBindingModel {
     @Size(min = 4, max = 20)
     private String lastName;
 
+    @UniqueUsername
     private String username;
 
     private String password;
