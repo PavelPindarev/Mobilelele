@@ -17,6 +17,7 @@ public class UserRegisterBindingModel {
     private String lastName;
 
     @NotNull
+    @Size(min = 4, max = 20)
     @UniqueUsername
     private String username;
 
