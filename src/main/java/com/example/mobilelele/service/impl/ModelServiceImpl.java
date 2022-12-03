@@ -6,7 +6,6 @@ import com.example.mobilelele.model.entity.enums.CategoryType;
 import com.example.mobilelele.repository.BrandRepository;
 import com.example.mobilelele.repository.ModelRepository;
 import com.example.mobilelele.service.ModelService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

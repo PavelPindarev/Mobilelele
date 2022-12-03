@@ -1,15 +1,13 @@
 package com.example.mobilelele.service;
 
+import com.example.mobilelele.model.dto.binding.UserRegisterBindingModel;
 import com.example.mobilelele.model.dto.service.UserLoginServiceModel;
-import com.example.mobilelele.model.dto.service.UserRegisterServiceModel;
 
 public interface UserService {
 
-    void login(UserLoginServiceModel userLoginServiceModel);
+    void registerAndLogin(UserRegisterBindingModel userRegisterDTO);
 
-    void logout();
-
-    void register(UserRegisterServiceModel userRegisterServiceModel);
+    void login(String userName);
 
     boolean isUsernameFree(String username);
 

@@ -58,27 +58,37 @@
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label for="password" class="text-white font-weight-bold">Password</label>
-                <input id="password"
-                       th:field="*{password}"
-                       th:errorclass="is-invalid"
-                       type="password"
-                       class="form-control"
-                       placeholder="Password"/>
+                <input
+                        id="password"
+                        type="password"
+                        th:field="*{password}"
+                        th:errorclass="is-invalid"
+                        class="form-control"
+                        placeholder="Password"/>
                 <p class="invalid-feedback errors alert alert-danger">
                     Password is required and should be between 4 and 20 symbols.
                 </p>
             </div>
+
             <div class="form-group col-md-6 mb-3">
-                <label for="confirmPassword" class="text-white font-weight-bold">Confirm Password</label>
-                <input id="confirmPassword"
-                       th:field="*{confirmPassword}"
-                       type="password" class="form-control"
-                       placeholder="Confirm Password"/>
-                <p th:unless="${passwordMatch}" class="errors alert alert-danger">
-                    Confirm Password do not match with Password.
+                <label for="confirmPassword" class="text-white font-weight-bold">ConfirmPassword</label>
+                <input
+                        id="confirmPassword"
+                        type="password"
+                        th:field="*{confirmPassword}"
+                        th:errorclass="is-invalid"
+                        class="form-control"
+                        placeholder="ConfirmPassword"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    ConfirmPassword is required and should be between 4 and 20 symbols.
                 </p>
             </div>
+
         </div>
+
+        <p th:unless="${passMatch}" class="errors alert alert-danger">
+            Password and ConfirmPassword don't match!
+        </p>
 
 
         <div class="row">

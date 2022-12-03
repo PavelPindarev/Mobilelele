@@ -1,15 +1,21 @@
 package com.example.mobilelele.service.impl;
 
+import com.example.mobilelele.model.dto.binding.UserRegisterBindingModel;
 import com.example.mobilelele.model.dto.service.UserLoginServiceModel;
-import com.example.mobilelele.model.dto.service.UserRegisterServiceModel;
 import com.example.mobilelele.model.entity.User;
 import com.example.mobilelele.model.entity.UserRole;
 import com.example.mobilelele.model.entity.enums.RoleType;
 import com.example.mobilelele.repository.UserRepository;
 import com.example.mobilelele.repository.UserRoleRepository;
+import com.example.mobilelele.service.MobileleUserDetailsService;
 import com.example.mobilelele.service.UserService;
-import com.example.mobilelele.user.CurrentUser;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +29,69 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final CurrentUser currentUser;
+    private final ModelMapper mapper;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, CurrentUser currentUser) {
+    public UserServiceImpl(UserRepository userRepository,
+                           UserRoleRepository userRoleRepository,
+                           PasswordEncoder passwordEncoder,
+                           UserDetailsService userDetailsService,
+                           ModelMapper mapper) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.currentUser = currentUser;
+        this.userDetailsService = new MobileleUserDetailsService(userRepository);
+        this.mapper = mapper;
     }
 
+//    AUTHENTICATIONS
+    @Override
+    public void registerAndLogin(UserRegisterBindingModel userRegisterDTO) {
+        User newUser = mapper.map(userRegisterDTO, User.class);
+        newUser.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
+
+        this.userRepository.save(newUser);
+        login(newUser.getUsername());
+    }
+
+    @Override
+    public void login(String userName) {
+        UserDetails userDetails =
+                userDetailsService.loadUserByUsername(userName);
+
+        Authentication auth =
+                new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        userDetails.getPassword(),
+                        userDetails.getAuthorities()
+                );
+
+        SecurityContextHolder.
+                getContext().
+                setAuthentication(auth);
+    }
+
+//    CHECKERS
+    @Override
+    public boolean isUsernameFree(String username) {
+        Optional<User> optUser = userRepository.findByUsername(username);
+        return optUser.isEmpty();
+    }
+
+    @Override
+    public boolean passwordsCheck(UserLoginServiceModel loginServiceModel) {
+        Optional<User> optUser =
+                userRepository.findByUsername(loginServiceModel.getUsername());
+
+        if (optUser.isEmpty()) return false;
+        User user = optUser.get();
+
+        return passwordEncoder.matches(loginServiceModel.getPassword(), user.getPassword());
+    }
+
+
+//    INITIALIZATIONS
     @Override
     public void initializeUsersAndRoles() {
         initializeRoles();
@@ -76,70 +135,6 @@ public class UserServiceImpl implements UserService {
 
             userRoleRepository.saveAll(List.of(adminRole, userRole));
         }
-    }
-
-    @Override
-    public void login(UserLoginServiceModel userLoginServiceModel) {
-        Optional<User> optUser =
-                userRepository.findByUsername(userLoginServiceModel.getUsername());
-
-        if (optUser.isEmpty()) {
-            logout();
-        } else {
-            User user = optUser.get();
-            login(user);
-            user.getRoles().forEach(r -> currentUser.addRole(r.getRole()));
-        }
-
-    }
-
-
-    @Override
-    public void register(UserRegisterServiceModel serviceModel) {
-
-        UserRole userRole = userRoleRepository.findByRole(RoleType.USER);
-
-        User newUser = new User()
-                .setFirstName(serviceModel.getFirstName())
-                .setLastName(serviceModel.getLastName())
-                .setUsername(serviceModel.getUsername())
-                .setPassword(passwordEncoder.encode(serviceModel.getPassword()))
-                .setActive(true)
-                .setRoles(Set.of(userRole));
-
-        newUser = userRepository.save(newUser);
-
-        login(newUser);
-    }
-
-    @Override
-    public boolean isUsernameFree(String username) {
-        Optional<User> optUser = userRepository.findByUsername(username);
-        return optUser.isEmpty();
-    }
-
-    @Override
-    public boolean passwordsCheck(UserLoginServiceModel loginServiceModel) {
-        Optional<User> optUser =
-                userRepository.findByUsername(loginServiceModel.getUsername());
-
-        if (optUser.isEmpty()) return false;
-        User user = optUser.get();
-
-        return passwordEncoder.matches(loginServiceModel.getPassword(), user.getPassword());
-    }
-
-
-    @Override
-    public void logout() {
-        currentUser.clear();
-    }
-
-    private void login(User user) {
-        currentUser.setUserName(user.getUsername())
-                .setFirstName(user.getFirstName())
-                .setLastName(user.getLastName())
-                .setLoggedIn(true);
     }
 
 }

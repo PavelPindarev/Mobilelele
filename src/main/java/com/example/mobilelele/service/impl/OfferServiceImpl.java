@@ -55,7 +55,7 @@ public class OfferServiceImpl implements OfferService {
                             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcXp1KBpDKgYs6VqndkBpX8twjPOZbHV86yg&usqp=CAU");
 
             Offer offer2 = new Offer()
-                    .setModel(modelRepository.findById(1L).orElse(null))
+                    .setModel(modelRepository.findById(2L).orElse(null))
                     .setEngine(EngineType.DIESEL)
                     .setTransmission(TransmissionType.AUTOMATIC)
                     .setMileage(209000)
@@ -65,7 +65,7 @@ public class OfferServiceImpl implements OfferService {
                     .setSeller(userRepository.findByUsername("admin")
                             .orElse(null)) // or currentUser.getUserName()
                     .setImageUrl(
-                            "https://www.picclickimg.com/d/l400/pict/283362908243_/FORD-ESCORT-MK5-16L-DOHC-16v-ZETEC.jpg");
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Ford_Escort_RS2000_MkI.jpg/420px-Ford_Escort_RS2000_MkI.jpg");
 
             offerRepository.saveAll(List.of(offer1, offer2));
         }

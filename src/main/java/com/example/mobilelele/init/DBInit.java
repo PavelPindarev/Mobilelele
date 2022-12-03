@@ -1,4 +1,4 @@
-package com.example.mobilelele;
+package com.example.mobilelele.init;
 
 import com.example.mobilelele.service.BrandService;
 import com.example.mobilelele.service.ModelService;

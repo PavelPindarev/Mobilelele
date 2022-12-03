@@ -1,7 +1,6 @@
 package com.example.mobilelele.web;
 
 import com.example.mobilelele.model.dto.binding.UserRegisterBindingModel;
-import com.example.mobilelele.model.dto.service.UserRegisterServiceModel;
 import com.example.mobilelele.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +16,25 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
-public class UserRegisterController {
+public class UserController {
 
     private final UserService userService;
     private final ModelMapper mapper;
 
     @Autowired
-    public UserRegisterController(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
         this.mapper = new ModelMapper();
     }
+
+    //REGISTER
 
     @ModelAttribute(name = "userModel")
     public UserRegisterBindingModel userModel() {
         return new UserRegisterBindingModel();
     }
 
-    @ModelAttribute(name = "passwordMatch")
+    @ModelAttribute(name = "passMatch")
     public boolean match() {
         return true;
     }
@@ -56,17 +57,21 @@ public class UserRegisterController {
                 String defaultMessage = error.getDefaultMessage();
                 assert defaultMessage != null;
                 boolean match = !defaultMessage.equals("Password don't match");
-                redirectAttributes.addFlashAttribute("passwordMatch", match);
+                redirectAttributes.addFlashAttribute("passMatch", match);
             });
             return "redirect:/users/register";
         }
 
-        UserRegisterServiceModel serviceModel =
-                mapper.map(userModel, UserRegisterServiceModel.class);
-
-        userService.register(serviceModel);
+        userService.registerAndLogin(userModel);
 
         return "redirect:/";
 
     }
+
+    //LOGIN
+    @GetMapping("/login")
+    public String login() {
+        return "auth-login";
+    }
+
 }
