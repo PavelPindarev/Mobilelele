@@ -1,10 +1,15 @@
 package com.example.mobilelele.service.impl;
 
-import com.example.mobilelele.model.dto.service.OfferUpdateServiceModel;
-import com.example.mobilelele.model.dto.view.OfferSummaryView;
+import com.example.mobilelele.model.dto.offer.OfferDetailDTO;
+import com.example.mobilelele.model.dto.offer.OfferUpdateOrAddBindingModel;
+import com.example.mobilelele.model.entity.BaseEntity;
+import com.example.mobilelele.model.entity.Model;
 import com.example.mobilelele.model.entity.Offer;
+import com.example.mobilelele.model.entity.User;
 import com.example.mobilelele.model.entity.enums.EngineType;
 import com.example.mobilelele.model.entity.enums.TransmissionType;
+import com.example.mobilelele.model.mapper.OfferMapper;
+import com.example.mobilelele.model.userdetails.MobileleUserDetails;
 import com.example.mobilelele.repository.ModelRepository;
 import com.example.mobilelele.repository.OfferRepository;
 import com.example.mobilelele.repository.UserRepository;
@@ -27,14 +32,17 @@ public class OfferServiceImpl implements OfferService {
     private final UserRepository userRepository;
     private final ModelRepository modelRepository;
 
-    private final ModelMapper mapper;
+    private final OfferMapper offerMapper;
 
     @Autowired
-    public OfferServiceImpl(OfferRepository offerRepository, UserRepository userRepository, ModelRepository modelRepository) {
+    public OfferServiceImpl(OfferRepository offerRepository,
+                            UserRepository userRepository,
+                            ModelRepository modelRepository,
+                            OfferMapper offerMapper) {
         this.offerRepository = offerRepository;
         this.userRepository = userRepository;
         this.modelRepository = modelRepository;
-        this.mapper = new ModelMapper();
+        this.offerMapper = offerMapper;
     }
 
     @Override
@@ -72,14 +80,19 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public OfferSummaryView getOfferById(Long id) {
-        Offer offer = offerRepository.findById(id).get();
-        return map(offer);
+    public Optional<OfferDetailDTO> getOfferById(Long id) {
+        return offerRepository.
+                findById(id).
+                map(offerMapper::offerToOfferDetailDto);
     }
 
     @Override
-    public List<OfferSummaryView> getAllOffers() {
-        return this.offerRepository.findAll().stream().map(this::map).collect(Collectors.toList());
+    public List<OfferDetailDTO> getAllOffers() {
+        return offerRepository
+                .findAll()
+                .stream()
+                .map(offerMapper::offerToOfferDetailDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -87,34 +100,51 @@ public class OfferServiceImpl implements OfferService {
         offerRepository.deleteById(id);
     }
 
+
     @Override
-    public void updateOffer(OfferUpdateServiceModel serviceModel) {
-        Long modelId = serviceModel.getId();
+    public void addOffer(OfferUpdateOrAddBindingModel offerModel, MobileleUserDetails userDetails) {
 
-        Offer offer = offerRepository.findById(modelId)
-                .orElseThrow(() ->
-                        new NotFoundObjectException("Offer with id " + modelId + " is not found."));
+        if (offerRepository.existsById(offerModel.getId())) {
+            Offer oldOffer = offerRepository.getById(offerModel.getId());
 
-        offer = setOffer(offer, serviceModel);
+            Offer newOffer = (Offer)
+                    oldOffer.setPrice(offerModel.getPrice())
+                            .setImageUrl(offerModel.getImageUrl())
+                            .setYear(offerModel.getYear())
+                            .setMileage(offerModel.getMileage())
+                            .setDescription(offerModel.getDescription())
+                            .setEngine(offerModel.getEngine())
+                            .setTransmission(offerModel.getTransmission())
+                            .setModified(Instant.now());
 
-        offerRepository.save(offer);
+            offerRepository.save(newOffer);
+        } else {
+            Offer newOffer =
+                    offerMapper.offerUpdateOrAddBindingModelToOffer(offerModel);
+
+            newOffer.setCreated(Instant.now());
+
+            User seller =
+                    userRepository.findByUsername(userDetails.getUsername())
+                            .orElseThrow();
+
+            Model model = modelRepository.findById(offerModel.getId())
+                    .orElseThrow();
+
+            newOffer.setModel(model);
+            newOffer.setSeller(seller);
+            newOffer.setModified(Instant.now());
+
+            offerRepository.save(newOffer);
+        }
     }
 
-    private Offer setOffer(Offer offer, OfferUpdateServiceModel serviceModel) {
-        return (Offer) offer.setPrice(serviceModel.getPrice())
-                .setDescription(serviceModel.getDescription())
-                .setMileage(serviceModel.getMileage())
-                .setEngine(serviceModel.getEngine())
-                .setTransmission(serviceModel.getTransmission())
-                .setYear(serviceModel.getYear())
-                .setImageUrl(serviceModel.getImageUrl())
-                .setModified(Instant.now());
+    @Override
+    public Optional<OfferUpdateOrAddBindingModel> getOfferEditDetails(Long id) {
+        return offerRepository.
+                findById(id).
+                map(offerMapper::offerToOfferUpdateOrAddBindingModel);
     }
 
-    private OfferSummaryView map(Offer offer) {
-        return mapper.map(offer, OfferSummaryView.class)
-                .setModel(offer.getModel().getName())
-                .setBrand(offer.getModel().getBrand().getName())
-                .setSeller(offer.getSeller().getFirstName() + " " + offer.getSeller().getLastName());
-    }
+
 }

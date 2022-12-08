@@ -1,9 +1,9 @@
 package com.example.mobilelele.web;
 
-import com.example.mobilelele.model.dto.binding.UserRegisterBindingModel;
+import com.example.mobilelele.model.dto.user.UserRegisterBindingModel;
 import com.example.mobilelele.service.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +19,10 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-    private final ModelMapper mapper;
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
-        this.mapper = new ModelMapper();
     }
 
     //REGISTER
@@ -72,6 +70,18 @@ public class UserController {
     @GetMapping("/login")
     public String login() {
         return "auth-login";
+    }
+
+//    ON ERROR
+    @PostMapping("/login-error")
+    public String loginError(@ModelAttribute(UsernamePasswordAuthenticationFilter
+            .SPRING_SECURITY_FORM_USERNAME_KEY) String username,
+                             RedirectAttributes redirectAttributes) {
+
+        redirectAttributes.addFlashAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY, username)
+                .addFlashAttribute("bad_credentials", true);
+
+        return "redirect:/users/login";
     }
 
 }

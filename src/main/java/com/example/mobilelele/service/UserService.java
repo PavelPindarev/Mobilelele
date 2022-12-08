@@ -1,7 +1,7 @@
 package com.example.mobilelele.service;
 
-import com.example.mobilelele.model.dto.binding.UserRegisterBindingModel;
-import com.example.mobilelele.model.dto.service.UserLoginServiceModel;
+import com.example.mobilelele.model.dto.user.UserLoginBindingModel;
+import com.example.mobilelele.model.dto.user.UserRegisterBindingModel;
 
 public interface UserService {
 
@@ -13,5 +13,5 @@ public interface UserService {
 
     void initializeUsersAndRoles();
 
-    boolean passwordsCheck(UserLoginServiceModel loginServiceModel);
+    boolean passwordsCheck(UserLoginBindingModel loginServiceModel);
 }

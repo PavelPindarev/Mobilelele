@@ -18,7 +18,7 @@
             </div>
             <div class="card-body pb-1">
                 <h5 class="card-title"
-                    th:text="*{year} + ' '  + *{brand} + ' '  + *{model}">
+                    th:text="*{getOfferHighlight()}">
                     Offer year Brand name Model name
                 </h5>
             </div>
@@ -31,7 +31,7 @@
                 </li>
             </ul>
             <div class="card-body">
-                <a class="card-link" th:href="@{/offers/{id}/details(id=*{id})}">Details</a>
+                <a class="card-link" th:href="@{/offers/{id}(id=*{id})}">Details</a>
             </div>
         </div>
     </div>

@@ -1,7 +1,6 @@
 package com.example.mobilelele.service;
 
-import com.example.mobilelele.model.dto.view.BrandSummaryView;
-import com.example.mobilelele.model.entity.Brand;
+import com.example.mobilelele.model.dto.brand.BrandSummaryView;
 
 import java.util.List;
 

@@ -1,13 +1,15 @@
-package com.example.mobilelele.model.dto.view;
+package com.example.mobilelele.model.dto.brand;
 
+import com.example.mobilelele.model.dto.model.ModelDTO;
 import com.example.mobilelele.model.entity.Model;
 
+import java.util.List;
 import java.util.Set;
 
 public class BrandSummaryView {
     private String name;
 
-    private Set<Model> models;
+    private List<ModelDTO> models;
 
     public String getName() {
         return name;
@@ -18,11 +20,11 @@ public class BrandSummaryView {
         return this;
     }
 
-    public Set<Model> getModels() {
+    public List<ModelDTO> getModels() {
         return models;
     }
 
-    public BrandSummaryView setModels(Set<Model> models) {
+    public BrandSummaryView setModels(List<ModelDTO> models) {
         this.models = models;
         return this;
     }

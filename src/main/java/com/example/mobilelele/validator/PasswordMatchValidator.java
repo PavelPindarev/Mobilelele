@@ -1,7 +1,6 @@
 package com.example.mobilelele.validator;
 
-import com.example.mobilelele.model.dto.binding.UserLoginBindingModel;
-import com.example.mobilelele.model.dto.service.UserLoginServiceModel;
+import com.example.mobilelele.model.dto.user.UserLoginBindingModel;
 import com.example.mobilelele.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,6 @@ public class PasswordMatchValidator implements ConstraintValidator<ValidPassword
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         UserLoginBindingModel loginModel = (UserLoginBindingModel) value;
 
-        return userService.passwordsCheck(mapper.map(loginModel, UserLoginServiceModel.class));
+        return userService.passwordsCheck(mapper.map(loginModel, UserLoginBindingModel.class));
     }
 }

@@ -1,13 +1,13 @@
 package com.example.mobilelele.web;
 
-import com.example.mobilelele.model.dto.binding.OfferUpdateBindingModel;
-import com.example.mobilelele.model.dto.service.OfferUpdateServiceModel;
-import com.example.mobilelele.model.dto.view.OfferSummaryView;
-import com.example.mobilelele.model.entity.enums.EngineType;
-import com.example.mobilelele.model.entity.enums.TransmissionType;
+import com.example.mobilelele.model.dto.offer.OfferUpdateOrAddBindingModel;
+import com.example.mobilelele.model.dto.offer.OfferDetailDTO;
+import com.example.mobilelele.model.userdetails.MobileleUserDetails;
+import com.example.mobilelele.service.BrandService;
 import com.example.mobilelele.service.OfferService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,28 +22,58 @@ public class OfferController {
 
     private final OfferService offerService;
     private final ModelMapper mapper;
+    private final BrandService brandService;
 
     @Autowired
-    public OfferController(OfferService offerService, ModelMapper mapper) {
+    public OfferController(OfferService offerService,
+                           BrandService brandService,
+                           ModelMapper mapper) {
         this.offerService = offerService;
+        this.brandService = brandService;
         this.mapper = mapper;
     }
 
+    //    ALL
     @GetMapping("/all")
     public String getAllOffersView(Model model) {
         model.addAttribute("offers", offerService.getAllOffers());
         return "offers";
     }
 
+    //    ADD
     @GetMapping("/add")
-    public String getAddOffersView() {
+    public String getAddOffersView(Model model) {
+        if (!model.containsAttribute("offerModel")) {
+            model.addAttribute("offerModel", new OfferUpdateOrAddBindingModel());
+        }
+        model.addAttribute("brands", brandService.getAllBrands());
+
         return "offer-add";
     }
 
-    @GetMapping("/{id}/details")
+    @PostMapping("/add")
+    public String addOffer(@Valid OfferUpdateOrAddBindingModel offerModel,
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes,
+                           @AuthenticationPrincipal MobileleUserDetails userDetails) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("offerModel", offerModel)
+                    .addFlashAttribute("org.springframework.validation.BindingResult.offerModel", bindingResult);
+            return "redirect:/offers/add";
+        }
+        offerService.addOffer(offerModel, userDetails);
+        return "redirect:/offers/all";
+    }
+
+
+    //    GET DETAILS
+    @GetMapping("/{id}")
     private String getOfferDetails(@PathVariable Long id, Model model) {
-        OfferSummaryView offerView = offerService.getOfferById(id);
-        model.addAttribute("offer", offerView);
+        if (!model.containsAttribute("offer")) {
+            OfferDetailDTO offerView = offerService.getOfferById(id).orElse(null);
+            model.addAttribute("offer", offerView);
+        }
         return "details";
     }
 
@@ -56,39 +86,38 @@ public class OfferController {
     }
 
     //UPDATE
-    @GetMapping("/{id}/update")
+    @GetMapping("/{id}/edit")
     public String updateOffer(@PathVariable Long id, Model model) {
-        OfferUpdateBindingModel updateBindingModel = mapper
-                .map(offerService.getOfferById(id), OfferUpdateBindingModel.class);
 
-        model.addAttribute("offerModel", updateBindingModel)
-                .addAttribute("engines", EngineType.values())
-                .addAttribute("transmissions", TransmissionType.values());
+        var offer = offerService.getOfferEditDetails(id).
+                orElseThrow(() -> new NotFoundObjectException("Offer with ID " + id + "not found"));
+
+        model.addAttribute("offerModel", offer);
         return "update";
     }
 
-    @GetMapping("/{id}/update/errors")
+    @GetMapping("/{id}/edit/errors")
     public String updateOfferErrors(@PathVariable Long id, Model model) {
-        model.addAttribute("engines", EngineType.values())
-                .addAttribute("transmissions", TransmissionType.values());
+        model.addAttribute("bad_credentials", true);
         return "update";
     }
 
-    @PatchMapping("/{id}/update")
+    @PatchMapping("/{id}/edit")
     public String updateOffer(@PathVariable Long id,
-                              @Valid OfferUpdateBindingModel offerModel,
+                              @Valid OfferUpdateOrAddBindingModel offerModel,
                               BindingResult bindingResult,
-                              RedirectAttributes redirectAttributes) {
-
+                              RedirectAttributes redirectAttributes,
+                              @AuthenticationPrincipal MobileleUserDetails userDetails) {
+//        TODO
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("offerModel", offerModel)
                     .addFlashAttribute("org.springframework.validation.BindingResult.offerModel", bindingResult);
 
-            return "redirect:/offers/" + id + "/update/errors";
+            return "redirect:/offers/" + id + "/edit/errors";
         }
-        offerService.updateOffer(mapper.map(offerModel, OfferUpdateServiceModel.class));
+        offerService.addOffer(offerModel, userDetails);
 
-        return "redirect:/offers/" + id + "/details";
+        return "redirect:/offers/" + id;
     }
 
 

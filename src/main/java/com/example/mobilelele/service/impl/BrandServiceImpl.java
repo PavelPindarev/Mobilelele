@@ -1,6 +1,7 @@
 package com.example.mobilelele.service.impl;
 
-import com.example.mobilelele.model.dto.view.BrandSummaryView;
+import com.example.mobilelele.model.dto.brand.BrandSummaryView;
+import com.example.mobilelele.model.dto.model.ModelDTO;
 import com.example.mobilelele.model.entity.Brand;
 import com.example.mobilelele.repository.BrandRepository;
 import com.example.mobilelele.service.BrandService;
@@ -36,6 +37,13 @@ public class BrandServiceImpl implements BrandService {
     }
 
     private BrandSummaryView map(Brand brand) {
-        return mapper.map(brand, BrandSummaryView.class);
+        List<ModelDTO> modelDTOS = brand.getModels()
+                .stream()
+                .map(model -> mapper.map(model, ModelDTO.class)).toList();
+
+        return new BrandSummaryView()
+                .setModels(modelDTOS)
+                .setName(brand.getName());
+
     }
 }

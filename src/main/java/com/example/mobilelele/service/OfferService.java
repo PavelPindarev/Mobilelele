@@ -1,18 +1,22 @@
 package com.example.mobilelele.service;
 
-import com.example.mobilelele.model.dto.service.OfferUpdateServiceModel;
-import com.example.mobilelele.model.dto.view.OfferSummaryView;
+import com.example.mobilelele.model.dto.offer.OfferDetailDTO;
+import com.example.mobilelele.model.dto.offer.OfferUpdateOrAddBindingModel;
+import com.example.mobilelele.model.userdetails.MobileleUserDetails;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OfferService {
-    List<OfferSummaryView> getAllOffers();
+    List<OfferDetailDTO> getAllOffers();
 
     void initializeOffers();
 
-    OfferSummaryView getOfferById(Long id);
+    Optional<OfferDetailDTO> getOfferById(Long id);
 
     void deleteOffer(Long id);
 
-    void updateOffer(OfferUpdateServiceModel updateServiceModel);
+    void addOffer(OfferUpdateOrAddBindingModel offerModel, MobileleUserDetails userDetails);
+
+    Optional<OfferUpdateOrAddBindingModel> getOfferEditDetails(Long id);
 }

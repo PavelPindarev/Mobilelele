@@ -1,6 +1,6 @@
 package com.example.mobilelele.validator;
 
-import com.example.mobilelele.model.dto.binding.UserRegisterBindingModel;
+import com.example.mobilelele.model.dto.user.UserRegisterBindingModel;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -1,4 +1,4 @@
-package com.example.mobilelele.model.dto.binding;
+package com.example.mobilelele.model.dto.user;
 
 import com.example.mobilelele.validator.UsernameExist;
 import com.example.mobilelele.validator.ValidPassword;

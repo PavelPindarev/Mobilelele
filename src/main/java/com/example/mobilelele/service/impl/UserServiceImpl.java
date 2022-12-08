@@ -1,7 +1,7 @@
 package com.example.mobilelele.service.impl;
 
-import com.example.mobilelele.model.dto.binding.UserRegisterBindingModel;
-import com.example.mobilelele.model.dto.service.UserLoginServiceModel;
+import com.example.mobilelele.model.dto.user.UserLoginBindingModel;
+import com.example.mobilelele.model.dto.user.UserRegisterBindingModel;
 import com.example.mobilelele.model.entity.User;
 import com.example.mobilelele.model.entity.UserRole;
 import com.example.mobilelele.model.entity.enums.RoleType;
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean passwordsCheck(UserLoginServiceModel loginServiceModel) {
+    public boolean passwordsCheck(UserLoginBindingModel loginServiceModel) {
         Optional<User> optUser =
                 userRepository.findByUsername(loginServiceModel.getUsername());
 

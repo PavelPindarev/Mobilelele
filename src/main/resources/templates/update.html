@@ -11,8 +11,8 @@
 <div class="container">
     <h2 class="text-center text-white">Update Offer</h2>
     <form th:method="patch"
-          th:action="@{/offers/{id}/update(id = *{id})}"
           th:object="${offerModel}"
+          th:action="@{/offers/{id}/edit(id = *{id})}"
           class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
 
         <div class="row">
@@ -44,11 +44,14 @@
         <div class="row">
             <div class="form-group col-md-6 mb-3">
                 <label class="text-center text-white font-weight-bold" for="engine">Engine</label>
-                <select id="engine" name="engine"
+                <select
+                        id="engine"
+                        name="engine"
                         th:errorclass="is-invalid"
-                        class="form-control">
+                        class="form-control"
+                >
                     <option
-                            th:each="anEngine : ${engines}"
+                            th:each="anEngine : ${T(com.example.mobilelele.model.entity.enums.EngineType).values()}"
                             th:value="${anEngine}"
                             th:text="${anEngine}"
                             th:selected="${anEngine} == *{engine}"
@@ -61,11 +64,14 @@
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label class="text-center text-white font-weight-bold" for="transmission">Transmission</label>
-                <select id="transmission" name="transmission"
+                <select
+                        id="transmission"
+                        name="transmission"
                         th:errorclass="is-invalid"
-                        class="form-control">
+                        class="form-control"
+                >
                     <option
-                            th:each="trans : ${transmissions}"
+                            th:each="trans : ${T(com.example.mobilelele.model.entity.enums.TransmissionType).values()}"
                             th:value="${trans}"
                             th:text="${trans}"
                             th:selected="${trans} == *{transmission}"
@@ -120,6 +126,10 @@
                     <input type="submit" class="btn btn-info btn-lg" value="Update Offer"/>
                 </div>
             </div>
+        </div>
+
+        <div th:if="${bad_credentials}" class="errors alert alert-danger">
+            Invalid format!
         </div>
     </form>
 </div>
