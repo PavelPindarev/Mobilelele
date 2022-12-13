@@ -7,11 +7,11 @@ public interface UserService {
 
     void registerAndLogin(UserRegisterBindingModel userRegisterDTO);
 
-    void login(String userName);
+    void login(String email);
 
-    boolean isUsernameFree(String username);
+    boolean isEmailFree(String email);
 
     void initializeUsersAndRoles();
 
-    boolean passwordsCheck(UserLoginBindingModel loginServiceModel);
+    boolean passwordsCheck(UserLoginBindingModel userLoginDTO);
 }

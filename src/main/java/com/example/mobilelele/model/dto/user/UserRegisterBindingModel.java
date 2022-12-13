@@ -1,10 +1,12 @@
 package com.example.mobilelele.model.dto.user;
 
-import com.example.mobilelele.validator.PasswordMatcher;
-import com.example.mobilelele.validator.UniqueUsername;
+import com.example.mobilelele.model.validation.PasswordMatcher;
+import com.example.mobilelele.model.validation.UniqueEmail;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 @PasswordMatcher
 public class UserRegisterBindingModel {
 
@@ -17,9 +19,10 @@ public class UserRegisterBindingModel {
     private String lastName;
 
     @NotNull
-    @Size(min = 4, max = 20)
-    @UniqueUsername
-    private String username;
+    @Email
+    @Size(min = 6, max = 35)
+    @UniqueEmail
+    private String email;
 
     @NotNull
     @Size(min = 4, max = 20)
@@ -47,12 +50,12 @@ public class UserRegisterBindingModel {
         return this;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public UserRegisterBindingModel setUsername(String username) {
-        this.username = username;
+    public UserRegisterBindingModel setEmail(String email) {
+        this.email = email;
         return this;
     }
 

@@ -1,4 +1,4 @@
-package com.example.mobilelele.validator;
+package com.example.mobilelele.model.validation;
 
 
 import javax.validation.Constraint;

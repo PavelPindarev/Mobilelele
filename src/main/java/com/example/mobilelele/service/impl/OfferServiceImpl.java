@@ -2,20 +2,17 @@ package com.example.mobilelele.service.impl;
 
 import com.example.mobilelele.model.dto.offer.OfferDetailDTO;
 import com.example.mobilelele.model.dto.offer.OfferUpdateOrAddBindingModel;
-import com.example.mobilelele.model.entity.BaseEntity;
 import com.example.mobilelele.model.entity.Model;
 import com.example.mobilelele.model.entity.Offer;
 import com.example.mobilelele.model.entity.User;
-import com.example.mobilelele.model.entity.enums.EngineType;
-import com.example.mobilelele.model.entity.enums.TransmissionType;
+import com.example.mobilelele.model.enums.EngineType;
+import com.example.mobilelele.model.enums.TransmissionType;
 import com.example.mobilelele.model.mapper.OfferMapper;
 import com.example.mobilelele.model.userdetails.MobileleUserDetails;
 import com.example.mobilelele.repository.ModelRepository;
 import com.example.mobilelele.repository.OfferRepository;
 import com.example.mobilelele.repository.UserRepository;
 import com.example.mobilelele.service.OfferService;
-import com.example.mobilelele.web.NotFoundObjectException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +54,7 @@ public class OfferServiceImpl implements OfferService {
                     .setPrice(BigDecimal.valueOf(14300))
                     .setYear(2019)
                     .setDescription("Used, but well services and in good condition.")
-                    .setSeller(userRepository.findByUsername("user")
+                    .setSeller(userRepository.findByEmail("user@example.com")
                             .orElse(null)) // or currentUser.getUserName()
                     .setImageUrl(
                             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcXp1KBpDKgYs6VqndkBpX8twjPOZbHV86yg&usqp=CAU");
@@ -70,7 +67,7 @@ public class OfferServiceImpl implements OfferService {
                     .setPrice(BigDecimal.valueOf(5500))
                     .setYear(2000)
                     .setDescription("After full maintenance, insurance, new tires...")
-                    .setSeller(userRepository.findByUsername("admin")
+                    .setSeller(userRepository.findByEmail("admin@example.com")
                             .orElse(null)) // or currentUser.getUserName()
                     .setImageUrl(
                             "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Ford_Escort_RS2000_MkI.jpg/420px-Ford_Escort_RS2000_MkI.jpg");
@@ -125,7 +122,7 @@ public class OfferServiceImpl implements OfferService {
             newOffer.setCreated(Instant.now());
 
             User seller =
-                    userRepository.findByUsername(userDetails.getUsername())
+                    userRepository.findByEmail(userDetails.getUsername())
                             .orElseThrow();
 
             Model model = modelRepository.findById(offerModel.getId())

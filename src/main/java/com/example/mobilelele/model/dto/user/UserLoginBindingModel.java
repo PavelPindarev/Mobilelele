@@ -1,22 +1,22 @@
 package com.example.mobilelele.model.dto.user;
 
-import com.example.mobilelele.validator.UsernameExist;
-import com.example.mobilelele.validator.ValidPassword;
+import com.example.mobilelele.model.validation.EmailExist;
+import com.example.mobilelele.model.validation.ValidPassword;
 
 @ValidPassword
 public class UserLoginBindingModel {
 
-    @UsernameExist
-    private String username;
+    @EmailExist
+    private String email;
 
     private String password;
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public UserLoginBindingModel setUsername(String username) {
-        this.username = username;
+    public UserLoginBindingModel setEmail(String email) {
+        this.email = email;
         return this;
     }
 

@@ -5,6 +5,7 @@ import com.example.mobilelele.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,19 +27,16 @@ public class UserController {
     }
 
     //REGISTER
-
-    @ModelAttribute(name = "userModel")
-    public UserRegisterBindingModel userModel() {
-        return new UserRegisterBindingModel();
-    }
-
     @ModelAttribute(name = "passMatch")
     public boolean match() {
         return true;
     }
 
     @GetMapping("/register")
-    public String getRegisterView() {
+    public String getRegisterView(Model model) {
+        if (!model.containsAttribute("userModel")) {
+            model.addAttribute("userModel", new UserRegisterBindingModel());
+        }
         return "auth-register";
     }
 
@@ -53,9 +51,9 @@ public class UserController {
 
             bindingResult.getAllErrors().forEach(error -> {
                 String defaultMessage = error.getDefaultMessage();
-                assert defaultMessage != null;
-                boolean match = !defaultMessage.equals("Password don't match");
-                redirectAttributes.addFlashAttribute("passMatch", match);
+                if (defaultMessage != null && defaultMessage.equals("Password don't match")) {
+                    redirectAttributes.addFlashAttribute("passMatch", false);
+                }
             });
             return "redirect:/users/register";
         }
@@ -72,7 +70,7 @@ public class UserController {
         return "auth-login";
     }
 
-//    ON ERROR
+    //    ON ERROR
     @PostMapping("/login-error")
     public String loginError(@ModelAttribute(UsernamePasswordAuthenticationFilter
             .SPRING_SECURITY_FORM_USERNAME_KEY) String username,

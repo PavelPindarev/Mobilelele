@@ -1,4 +1,4 @@
-package com.example.mobilelele.validator;
+package com.example.mobilelele.model.validation;
 
 import com.example.mobilelele.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String> {
+public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 
     private final UserService userService;
 
     @Autowired
-    public UniqueUsernameValidator(UserService userService) {
+    public UniqueEmailValidator(UserService userService) {
         this.userService = userService;
     }
 
@@ -20,6 +20,6 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
         if (value == null) {
             return true;
         }
-        return userService.isUsernameFree(value);
+        return userService.isEmailFree(value);
     }
 }

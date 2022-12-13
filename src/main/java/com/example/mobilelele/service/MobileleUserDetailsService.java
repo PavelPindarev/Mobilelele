@@ -20,16 +20,16 @@ public class MobileleUserDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
                 .map(this::map)
-                .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " not found!"));
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found!"));
     }
 
     private MobileleUserDetails map(User user) {
         return new MobileleUserDetails(
                 user.getId(),
-                user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
                 user.getFirstName(),
                 user.getLastName(),

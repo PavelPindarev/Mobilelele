@@ -1,6 +1,6 @@
 package com.example.mobilelele.model.entity;
 
-import com.example.mobilelele.model.entity.enums.RoleType;
+import com.example.mobilelele.model.enums.RoleType;
 
 import javax.persistence.*;
 

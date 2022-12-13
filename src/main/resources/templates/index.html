@@ -16,7 +16,7 @@
                 th:text="${#authentication.principal.fullName}">
         </span>
 
-        <span sec:authorize="!isAuthenticated()">
+        <span sec:authorize="isAnonymous()">
             Anonymous
         </span>
     </h5>

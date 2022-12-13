@@ -1,6 +1,6 @@
 package com.example.mobilelele.model.dto.model;
 
-import com.example.mobilelele.model.entity.enums.CategoryType;
+import com.example.mobilelele.model.enums.CategoryType;
 
 
 public class ModelDTO {

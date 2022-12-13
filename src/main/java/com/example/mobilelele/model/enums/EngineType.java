@@ -1,4 +1,4 @@
-package com.example.mobilelele.model.entity.enums;
+package com.example.mobilelele.model.enums;
 
 public enum EngineType {
     GASOLINE, DIESEL, ELECTRIC, HYBRID

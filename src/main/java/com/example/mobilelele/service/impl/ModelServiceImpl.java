@@ -2,7 +2,7 @@ package com.example.mobilelele.service.impl;
 
 import com.example.mobilelele.model.entity.Brand;
 import com.example.mobilelele.model.entity.Model;
-import com.example.mobilelele.model.entity.enums.CategoryType;
+import com.example.mobilelele.model.enums.CategoryType;
 import com.example.mobilelele.repository.BrandRepository;
 import com.example.mobilelele.repository.ModelRepository;
 import com.example.mobilelele.service.ModelService;

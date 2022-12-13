@@ -1,10 +1,9 @@
 package com.example.mobilelele.model.dto.offer;
 
-import com.example.mobilelele.model.entity.enums.EngineType;
-import com.example.mobilelele.model.entity.enums.TransmissionType;
+import com.example.mobilelele.model.enums.EngineType;
+import com.example.mobilelele.model.enums.TransmissionType;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 
 public class OfferDetailDTO {
     private Long id;

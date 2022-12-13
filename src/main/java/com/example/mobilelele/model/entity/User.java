@@ -8,7 +8,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends BaseEntity{
     @Column(nullable = false)
-    private String username;
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -40,12 +40,12 @@ public class User extends BaseEntity{
         return this;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public User setUsername(String username) {
-        this.username = username;
+    public User setEmail(String email) {
+        this.email = email;
         return this;
     }
 

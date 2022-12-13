@@ -1,6 +1,6 @@
 package com.example.mobilelele.model.entity;
 
-import com.example.mobilelele.model.entity.enums.CategoryType;
+import com.example.mobilelele.model.enums.CategoryType;
 
 import javax.persistence.*;
 import java.util.HashSet;

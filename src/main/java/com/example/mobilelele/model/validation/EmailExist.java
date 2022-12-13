@@ -1,4 +1,4 @@
-package com.example.mobilelele.validator;
+package com.example.mobilelele.model.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueUsernameValidator.class)
-public @interface UniqueUsername {
+@Constraint(validatedBy = EmailExistValidator.class)
+public @interface EmailExist {
 
-    String message() default "Username is not unique";
+    String message() default "Email is don't exist";
 
     Class<?>[] groups() default {};
 

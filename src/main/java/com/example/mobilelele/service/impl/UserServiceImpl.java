@@ -4,7 +4,7 @@ import com.example.mobilelele.model.dto.user.UserLoginBindingModel;
 import com.example.mobilelele.model.dto.user.UserRegisterBindingModel;
 import com.example.mobilelele.model.entity.User;
 import com.example.mobilelele.model.entity.UserRole;
-import com.example.mobilelele.model.entity.enums.RoleType;
+import com.example.mobilelele.model.enums.RoleType;
 import com.example.mobilelele.repository.UserRepository;
 import com.example.mobilelele.repository.UserRoleRepository;
 import com.example.mobilelele.service.MobileleUserDetailsService;
@@ -52,13 +52,13 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
 
         this.userRepository.save(newUser);
-        login(newUser.getUsername());
+        login(newUser.getEmail());
     }
 
     @Override
-    public void login(String userName) {
+    public void login(String email) {
         UserDetails userDetails =
-                userDetailsService.loadUserByUsername(userName);
+                userDetailsService.loadUserByUsername(email);
 
         Authentication auth =
                 new UsernamePasswordAuthenticationToken(
@@ -72,22 +72,22 @@ public class UserServiceImpl implements UserService {
                 setAuthentication(auth);
     }
 
-//    CHECKERS
+//    CHECKERS FOR VALIDATION
     @Override
-    public boolean isUsernameFree(String username) {
-        Optional<User> optUser = userRepository.findByUsername(username);
+    public boolean isEmailFree(String email) {
+        Optional<User> optUser = userRepository.findByEmail(email);
         return optUser.isEmpty();
     }
 
     @Override
-    public boolean passwordsCheck(UserLoginBindingModel loginServiceModel) {
+    public boolean passwordsCheck(UserLoginBindingModel userLoginDTO) {
         Optional<User> optUser =
-                userRepository.findByUsername(loginServiceModel.getUsername());
+                userRepository.findByEmail(userLoginDTO.getEmail());
 
         if (optUser.isEmpty()) return false;
         User user = optUser.get();
 
-        return passwordEncoder.matches(loginServiceModel.getPassword(), user.getPassword());
+        return passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword());
     }
 
 
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
             UserRole userRole = userRoleRepository.findByRole(RoleType.USER);
 
             User admin = new User()
-                    .setUsername("admin")
+                    .setEmail("admin@example.com")
                     .setPassword(passwordEncoder.encode("test"))
                     .setFirstName("Admin")
                     .setLastName("Adminov")
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
                     .setRoles(Set.of(adminRole, userRole));
 
             User user = new User()
-                    .setUsername("user")
+                    .setEmail("user@example.com")
                     .setPassword(passwordEncoder.encode("test"))
                     .setFirstName("User")
                     .setLastName("Userov")

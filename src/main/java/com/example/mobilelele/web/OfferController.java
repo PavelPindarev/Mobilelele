@@ -108,7 +108,7 @@ public class OfferController {
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes,
                               @AuthenticationPrincipal MobileleUserDetails userDetails) {
-//        TODO
+
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("offerModel", offerModel)
                     .addFlashAttribute("org.springframework.validation.BindingResult.offerModel", bindingResult);

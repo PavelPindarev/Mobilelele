@@ -51,7 +51,7 @@
                         class="form-control"
                 >
                     <option
-                            th:each="anEngine : ${T(com.example.mobilelele.model.entity.enums.EngineType).values()}"
+                            th:each="anEngine : ${T(com.example.mobilelele.model.enums.EngineType).values()}"
                             th:value="${anEngine}"
                             th:text="${anEngine}"
                             th:selected="${anEngine} == *{engine}"
@@ -71,7 +71,7 @@
                         class="form-control"
                 >
                     <option
-                            th:each="trans : ${T(com.example.mobilelele.model.entity.enums.TransmissionType).values()}"
+                            th:each="trans : ${T(com.example.mobilelele.model.enums.TransmissionType).values()}"
                             th:value="${trans}"
                             th:text="${trans}"
                             th:selected="${trans} == *{transmission}"
