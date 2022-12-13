@@ -7,6 +7,7 @@ import com.example.mobilelele.model.entity.UserRole;
 import com.example.mobilelele.model.enums.RoleType;
 import com.example.mobilelele.repository.UserRepository;
 import com.example.mobilelele.repository.UserRoleRepository;
+import com.example.mobilelele.service.EmailService;
 import com.example.mobilelele.service.MobileleUserDetailsService;
 import com.example.mobilelele.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -26,18 +27,22 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final EmailService emailService;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final ModelMapper mapper;
     private final UserDetailsService userDetailsService;
 
+    private final PasswordEncoder passwordEncoder;
+    private final ModelMapper mapper;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,
+    public UserServiceImpl(EmailService emailService,
+                           UserRepository userRepository,
                            UserRoleRepository userRoleRepository,
-                           PasswordEncoder passwordEncoder,
                            UserDetailsService userDetailsService,
+                           PasswordEncoder passwordEncoder,
                            ModelMapper mapper) {
+        this.emailService = emailService;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -45,7 +50,7 @@ public class UserServiceImpl implements UserService {
         this.mapper = mapper;
     }
 
-//    AUTHENTICATIONS
+    //    AUTHENTICATIONS
     @Override
     public void registerAndLogin(UserRegisterBindingModel userRegisterDTO) {
         User newUser = mapper.map(userRegisterDTO, User.class);
@@ -53,6 +58,9 @@ public class UserServiceImpl implements UserService {
 
         this.userRepository.save(newUser);
         login(newUser.getEmail());
+
+        String fullName = newUser.getFirstName() + " " + newUser.getLastName();
+        emailService.sendRegistrationEmail(newUser.getEmail(), fullName);
     }
 
     @Override
@@ -72,7 +80,7 @@ public class UserServiceImpl implements UserService {
                 setAuthentication(auth);
     }
 
-//    CHECKERS FOR VALIDATION
+    //    CHECKERS FOR VALIDATION
     @Override
     public boolean isEmailFree(String email) {
         Optional<User> optUser = userRepository.findByEmail(email);
@@ -91,7 +99,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-//    INITIALIZATIONS
+    //    INITIALIZATIONS
     @Override
     public void initializeUsersAndRoles() {
         initializeRoles();
