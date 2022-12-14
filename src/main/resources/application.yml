@@ -17,3 +17,8 @@ spring:
                 enabled: true
 
 
+mail:
+  host: "localhost"
+  port: 1025
+  username: "mobilele@mobilele.com"
+  password: ""

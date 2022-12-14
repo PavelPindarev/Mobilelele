@@ -10,7 +10,7 @@
 
 <div class="container-fluid">
     <h5 class="text-center text-white mt-5">
-        Welcome to MobiLeLeLe,
+       <th:block th:text="#{registration_welcome}"></th:block>
         <span
                 sec:authorize="isAuthenticated()"
                 th:text="${#authentication.principal.fullName}">
