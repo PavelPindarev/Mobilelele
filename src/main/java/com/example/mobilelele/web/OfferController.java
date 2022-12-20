@@ -7,6 +7,9 @@ import com.example.mobilelele.service.BrandService;
 import com.example.mobilelele.service.OfferService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,8 +38,13 @@ public class OfferController {
 
     //    ALL
     @GetMapping("/all")
-    public String getAllOffersView(Model model) {
-        model.addAttribute("offers", offerService.getAllOffers());
+    public String getAllOffersView(
+            Model model,
+            @PageableDefault(
+                    sort = "price",
+                    direction = Sort.Direction.ASC,
+                    page = 0, size = 5) Pageable pageable) {
+        model.addAttribute("offers", offerService.getAllOffers(pageable));
         return "offers";
     }
 

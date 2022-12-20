@@ -14,6 +14,8 @@ import com.example.mobilelele.repository.OfferRepository;
 import com.example.mobilelele.repository.UserRepository;
 import com.example.mobilelele.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -84,12 +86,10 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<OfferDetailDTO> getAllOffers() {
+    public Page<OfferDetailDTO> getAllOffers(Pageable pageable) {
         return offerRepository
-                .findAll()
-                .stream()
-                .map(offerMapper::offerToOfferDetailDto)
-                .collect(Collectors.toList());
+                .findAll(pageable)
+                .map(offerMapper::offerToOfferDetailDto);
     }
 
     @Override
