@@ -8,7 +8,6 @@ import com.example.mobilelele.model.enums.RoleType;
 import com.example.mobilelele.repository.UserRepository;
 import com.example.mobilelele.repository.UserRoleRepository;
 import com.example.mobilelele.service.EmailService;
-import com.example.mobilelele.service.MobileleUserDetailsService;
 import com.example.mobilelele.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -46,13 +46,15 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userDetailsService = new MobileleUserDetailsService(userRepository);
+        this.userDetailsService = userDetailsService;
         this.mapper = mapper;
     }
 
     //    AUTHENTICATIONS
     @Override
-    public void registerAndLogin(UserRegisterBindingModel userRegisterDTO) {
+    public void registerAndLogin(UserRegisterBindingModel userRegisterDTO,
+                                 Locale preferredLocale) {
+
         User newUser = mapper.map(userRegisterDTO, User.class);
         newUser.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
 
@@ -60,7 +62,10 @@ public class UserServiceImpl implements UserService {
         login(newUser.getEmail());
 
         String fullName = newUser.getFirstName() + " " + newUser.getLastName();
-        emailService.sendRegistrationEmail(newUser.getEmail(), fullName);
+        emailService.sendRegistrationEmail(
+                newUser.getEmail(),
+                fullName,
+                preferredLocale);
     }
 
     @Override

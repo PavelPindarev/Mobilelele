@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -20,10 +22,13 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final LocaleResolver localeResolver;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService,
+                          LocaleResolver localeResolver) {
         this.userService = userService;
+        this.localeResolver = localeResolver;
     }
 
     //REGISTER
@@ -43,7 +48,8 @@ public class UserController {
     @PostMapping("/register")
     public String register(@Valid UserRegisterBindingModel userModel,
                            BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes) {
+                           RedirectAttributes redirectAttributes,
+                           HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userModel", userModel)
@@ -58,7 +64,9 @@ public class UserController {
             return "redirect:/users/register";
         }
 
-        userService.registerAndLogin(userModel);
+        userService.registerAndLogin(
+                userModel,
+                localeResolver.resolveLocale(request));
 
         return "redirect:/";
 

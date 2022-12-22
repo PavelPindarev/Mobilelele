@@ -1,10 +1,10 @@
-package com.example.mobilelele2;
+package com.example.mobilelelele;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Mobilelele2ApplicationTests {
+class MobiLeLeLeApplicationTests {
 
     @Test
     void contextLoads() {
