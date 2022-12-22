@@ -80,6 +80,9 @@ public class OfferController {
     private String getOfferDetails(@PathVariable Long id, Model model) {
         if (!model.containsAttribute("offer")) {
             OfferDetailDTO offerView = offerService.getOfferById(id).orElse(null);
+            if (offerView == null) {
+                throw new NotFoundObjectException("There is not object with id " + id);
+            }
             model.addAttribute("offer", offerView);
         }
         return "details";
