@@ -4,7 +4,6 @@ import com.example.mobilelele.model.entity.User;
 import com.example.mobilelele.model.entity.UserRole;
 import com.example.mobilelele.model.userdetails.MobileleUserDetails;
 import com.example.mobilelele.repository.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
