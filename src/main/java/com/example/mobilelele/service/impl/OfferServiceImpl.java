@@ -1,6 +1,7 @@
 package com.example.mobilelele.service.impl;
 
 import com.example.mobilelele.model.dto.offer.OfferDetailDTO;
+import com.example.mobilelele.model.dto.offer.OfferSearchDTO;
 import com.example.mobilelele.model.dto.offer.OfferUpdateOrAddBindingModel;
 import com.example.mobilelele.model.entity.Model;
 import com.example.mobilelele.model.entity.Offer;
@@ -11,6 +12,7 @@ import com.example.mobilelele.model.mapper.OfferMapper;
 import com.example.mobilelele.model.userdetails.MobileleUserDetails;
 import com.example.mobilelele.repository.ModelRepository;
 import com.example.mobilelele.repository.OfferRepository;
+import com.example.mobilelele.repository.OfferSpecification;
 import com.example.mobilelele.repository.UserRepository;
 import com.example.mobilelele.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,6 +142,14 @@ public class OfferServiceImpl implements OfferService {
         return offerRepository.
                 findById(id).
                 map(offerMapper::offerToOfferUpdateOrAddBindingModel);
+    }
+
+    @Override
+    public List<OfferDetailDTO> searchOffer(OfferSearchDTO offerSearchDTO) {
+        return offerRepository.findAll(new OfferSpecification(offerSearchDTO))
+                .stream()
+                .map(offerMapper::offerToOfferDetailDTO)
+                .toList();
     }
 
 

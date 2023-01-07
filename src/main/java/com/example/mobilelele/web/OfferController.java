@@ -1,5 +1,6 @@
 package com.example.mobilelele.web;
 
+import com.example.mobilelele.model.dto.offer.OfferSearchDTO;
 import com.example.mobilelele.model.dto.offer.OfferUpdateOrAddBindingModel;
 import com.example.mobilelele.model.dto.offer.OfferDetailDTO;
 import com.example.mobilelele.model.userdetails.MobileleUserDetails;
@@ -129,6 +130,33 @@ public class OfferController {
         offerService.addOffer(offerModel, userDetails);
 
         return "redirect:/offers/" + id;
+    }
+
+    //SEARCH
+
+    @GetMapping("/search")
+    public String searchOffer(@Valid OfferSearchDTO offerSearchDTO,
+                              BindingResult bindingResult,
+                              Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("searchOfferModel", offerSearchDTO)
+                    .addAttribute("org.springframework.validation.BindingResult.searchOfferModel",
+                            bindingResult);
+
+            return "offers-search";
+        }
+
+        if (!model.containsAttribute("searchOfferModel")) {
+            model.addAttribute("searchOfferModel", offerSearchDTO);
+        }
+
+        if (!offerSearchDTO.isEmpty()) {
+           model.addAttribute("offers", offerService.searchOffer(offerSearchDTO));
+        }
+
+        return "offers-search";
+
     }
 
 
