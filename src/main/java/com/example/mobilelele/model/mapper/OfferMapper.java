@@ -5,8 +5,10 @@ import com.example.mobilelele.model.dto.offer.OfferUpdateOrAddBindingModel;
 import com.example.mobilelele.model.entity.Offer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OfferMapper {
     Offer offerUpdateOrAddBindingModelToOffer(OfferUpdateOrAddBindingModel addOfferDTO);
 
@@ -17,5 +19,6 @@ public interface OfferMapper {
     @Mapping(source = "model.brand.name", target = "brand")
     @Mapping(source = "seller.firstName", target = "sellerFirstName")
     @Mapping(source = "seller.lastName", target = "sellerLastName")
-    OfferDetailDTO offerToOfferDetailDto(Offer offer);
+    OfferDetailDTO offerToOfferDetailDTO(Offer offerEntity);
+    //created, modified, model, seller
 }

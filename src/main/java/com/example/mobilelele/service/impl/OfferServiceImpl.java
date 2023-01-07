@@ -81,14 +81,14 @@ public class OfferServiceImpl implements OfferService {
     public Optional<OfferDetailDTO> getOfferById(Long id) {
         return offerRepository.
                 findById(id).
-                map(offerMapper::offerToOfferDetailDto);
+                map(offerMapper::offerToOfferDetailDTO);
     }
 
     @Override
     public Page<OfferDetailDTO> getAllOffers(Pageable pageable) {
         return offerRepository
                 .findAll(pageable)
-                .map(offerMapper::offerToOfferDetailDto);
+                .map(offerMapper::offerToOfferDetailDTO);
     }
 
     @Override
