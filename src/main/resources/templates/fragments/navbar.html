@@ -29,19 +29,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto col-12 justify-content-between">
 
-                <li class="nav-item" sec:authorize="isAuthenticated()">
+                <li class="nav-item" >
                     <a class="nav-link"
                        th:text="#{navbar_search}"
                        th:href="@{/offers/search}">Search Offers</a>
                 </li>
 
-                <li class="nav-item" sec:authorize="isAuthenticated()">
+                <li class="nav-item" >
                     <a class="nav-link"
                        th:text="#{navbar_all_brands}"
                        th:href="@{/brands/all}">All Brands</a>
                 </li>
 
-                <li class="nav-item" sec:authorize="isAuthenticated()">
+                <li class="nav-item" >
                     <a class="nav-link"
                        th:text="#{navbar_all_offers}"
                        th:href="@{/offers/all}">All Offers</a>

@@ -24,4 +24,6 @@ public interface OfferService {
     Optional<OfferUpdateOrAddBindingModel> getOfferEditDetails(Long id);
 
     List<OfferDetailDTO> searchOffer(OfferSearchDTO offerSearchDTO);
+
+    boolean isOwner(String userName, Long offerId);
 }

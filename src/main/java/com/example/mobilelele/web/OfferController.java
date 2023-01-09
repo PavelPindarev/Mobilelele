@@ -1,8 +1,8 @@
 package com.example.mobilelele.web;
 
+import com.example.mobilelele.exception.NotFoundObjectException;
 import com.example.mobilelele.model.dto.offer.OfferSearchDTO;
 import com.example.mobilelele.model.dto.offer.OfferUpdateOrAddBindingModel;
-import com.example.mobilelele.model.dto.offer.OfferDetailDTO;
 import com.example.mobilelele.model.userdetails.MobileleUserDetails;
 import com.example.mobilelele.service.BrandService;
 import com.example.mobilelele.service.OfferService;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,16 +26,13 @@ import javax.validation.Valid;
 public class OfferController {
 
     private final OfferService offerService;
-    private final ModelMapper mapper;
     private final BrandService brandService;
 
     @Autowired
     public OfferController(OfferService offerService,
-                           BrandService brandService,
-                           ModelMapper mapper) {
+                           BrandService brandService) {
         this.offerService = offerService;
         this.brandService = brandService;
-        this.mapper = mapper;
     }
 
     //    ALL
@@ -78,20 +76,21 @@ public class OfferController {
 
     //    GET DETAILS
     @GetMapping("/{id}")
-    private String getOfferDetails(@PathVariable Long id, Model model) {
-        if (!model.containsAttribute("offer")) {
-            OfferDetailDTO offerView = offerService.getOfferById(id).orElse(null);
-            if (offerView == null) {
-                throw new NotFoundObjectException("There is not object with id " + id);
-            }
-            model.addAttribute("offer", offerView);
-        }
+    public String getOfferDetails(@PathVariable Long id, Model model) {
+
+        var offerView = offerService.getOfferById(id).
+                orElseThrow(() -> new NotFoundObjectException("Offer with UUID " + id + " not found!"));
+
+        model.addAttribute("offer", offerView);
+
         return "details";
     }
 
     //DELETE
+    @PreAuthorize("isOwner(#id)")
     @DeleteMapping("/{id}")
-    private String deleteOffer(@PathVariable Long id) {
+    public String deleteOffer(
+            @PathVariable Long id) {
         offerService.deleteOffer(id);
 
         return "redirect:/offers/all";
@@ -152,7 +151,7 @@ public class OfferController {
         }
 
         if (!offerSearchDTO.isEmpty()) {
-           model.addAttribute("offers", offerService.searchOffer(offerSearchDTO));
+            model.addAttribute("offers", offerService.searchOffer(offerSearchDTO));
         }
 
         return "offers-search";

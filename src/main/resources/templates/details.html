@@ -39,11 +39,16 @@
                 >
                     <input type="submit" value="Delete">
                 </form>
+
+                <form
+                        th:action="@{/offers/{id}/edit(id=*{id})}"
+                        th:method="get"
+                >
+                    <input type="submit" value="Edit offer">
+                </form>
+
             </div>
 
-            <a th:href="@{/offers/{id}/edit(id=*{id})}">
-                Edit offer
-            </a>
         </div>
 
         <div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">

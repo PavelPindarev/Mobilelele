@@ -7,6 +7,7 @@ import com.example.mobilelele.model.entity.Model;
 import com.example.mobilelele.model.entity.Offer;
 import com.example.mobilelele.model.entity.User;
 import com.example.mobilelele.model.enums.EngineType;
+import com.example.mobilelele.model.enums.RoleType;
 import com.example.mobilelele.model.enums.TransmissionType;
 import com.example.mobilelele.model.mapper.OfferMapper;
 import com.example.mobilelele.model.userdetails.MobileleUserDetails;
@@ -46,40 +47,6 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public void initializeOffers() {
-
-        if (offerRepository.count() == 0) {
-            Offer offer1 = new Offer()
-                    .setModel(modelRepository.findById(1L).orElse(null))
-                    .setEngine(EngineType.GASOLINE)
-                    .setTransmission(TransmissionType.MANUAL)
-                    .setMileage(22500)
-                    .setPrice(BigDecimal.valueOf(14300))
-                    .setYear(2019)
-                    .setDescription("Used, but well services and in good condition.")
-                    .setSeller(userRepository.findByEmail("user@example.com")
-                            .orElse(null)) // or currentUser.getUserName()
-                    .setImageUrl(
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcXp1KBpDKgYs6VqndkBpX8twjPOZbHV86yg&usqp=CAU");
-
-            Offer offer2 = new Offer()
-                    .setModel(modelRepository.findById(2L).orElse(null))
-                    .setEngine(EngineType.DIESEL)
-                    .setTransmission(TransmissionType.AUTOMATIC)
-                    .setMileage(209000)
-                    .setPrice(BigDecimal.valueOf(5500))
-                    .setYear(2000)
-                    .setDescription("After full maintenance, insurance, new tires...")
-                    .setSeller(userRepository.findByEmail("admin@example.com")
-                            .orElse(null)) // or currentUser.getUserName()
-                    .setImageUrl(
-                            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Ford_Escort_RS2000_MkI.jpg/420px-Ford_Escort_RS2000_MkI.jpg");
-
-            offerRepository.saveAll(List.of(offer1, offer2));
-        }
-    }
-
-    @Override
     public Optional<OfferDetailDTO> getOfferById(Long id) {
         return offerRepository.
                 findById(id).
@@ -103,7 +70,8 @@ public class OfferServiceImpl implements OfferService {
     public void addOffer(OfferUpdateOrAddBindingModel offerModel, MobileleUserDetails userDetails) {
 
         if (offerRepository.existsById(offerModel.getId())) {
-            Offer oldOffer = offerRepository.getById(offerModel.getId());
+            //UPDATE
+            Offer oldOffer = offerRepository.findById(offerModel.getId()).get();
 
             Offer newOffer = (Offer)
                     oldOffer.setPrice(offerModel.getPrice())
@@ -117,6 +85,7 @@ public class OfferServiceImpl implements OfferService {
 
             offerRepository.save(newOffer);
         } else {
+            //CREATE
             Offer newOffer =
                     offerMapper.offerUpdateOrAddBindingModelToOffer(offerModel);
 
@@ -152,5 +121,59 @@ public class OfferServiceImpl implements OfferService {
                 .toList();
     }
 
+    @Override
+    public boolean isOwner(String userName, Long offerId) {
+
+        boolean isOwner = offerRepository.findById(offerId)
+                .filter(o -> o.getSeller().getEmail().equals(userName))
+                .isPresent();
+
+        if (isOwner) return true;
+
+        return userRepository.findByEmail(userName)
+                .filter(this::isAdmin)
+                .isPresent();
+    }
+
+    private boolean isAdmin(User user) {
+        return user.getRoles().stream()
+                .anyMatch(userRole -> userRole.getRole().equals(RoleType.ADMIN));
+    }
+
+
+    //INITIALIZATIONS
+    @Override
+    public void initializeOffers() {
+
+        if (offerRepository.count() == 0) {
+            Offer offer1 = new Offer()
+                    .setModel(modelRepository.findById(1L).orElse(null))
+                    .setEngine(EngineType.GASOLINE)
+                    .setTransmission(TransmissionType.MANUAL)
+                    .setMileage(22500)
+                    .setPrice(BigDecimal.valueOf(14300))
+                    .setYear(2019)
+                    .setDescription("Used, but well services and in good condition.")
+                    .setSeller(userRepository.findByEmail("user@example.com")
+                            .orElse(null)) // or currentUser.getUserName()
+                    .setImageUrl(
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcXp1KBpDKgYs6VqndkBpX8twjPOZbHV86yg&usqp=CAU");
+
+            Offer offer2 = new Offer()
+                    .setModel(modelRepository.findById(2L).orElse(null))
+                    .setEngine(EngineType.DIESEL)
+                    .setTransmission(TransmissionType.AUTOMATIC)
+                    .setMileage(209000)
+                    .setPrice(BigDecimal.valueOf(5500))
+                    .setYear(2000)
+                    .setDescription("After full maintenance, insurance, new tires...")
+                    .setSeller(userRepository.findByEmail("admin@example.com")
+                            .orElse(null)) // or currentUser.getUserName()
+                    .setImageUrl(
+                            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Ford_Escort_RS2000_MkI.jpg/420px-Ford_Escort_RS2000_MkI.jpg");
+
+            offerRepository.saveAll(List.of(offer1, offer2));
+        }
+    }
 
 }
