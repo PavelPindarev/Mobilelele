@@ -6,7 +6,6 @@ import com.example.mobilelele.model.dto.offer.OfferUpdateOrAddBindingModel;
 import com.example.mobilelele.model.userdetails.MobileleUserDetails;
 import com.example.mobilelele.service.BrandService;
 import com.example.mobilelele.service.OfferService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -76,12 +75,20 @@ public class OfferController {
 
     //    GET DETAILS
     @GetMapping("/{id}")
-    public String getOfferDetails(@PathVariable Long id, Model model) {
+    public String getOfferDetails(@PathVariable Long id,
+                                  Model model,
+                                  @AuthenticationPrincipal MobileleUserDetails userDetails) {
 
         var offerView = offerService.getOfferById(id).
                 orElseThrow(() -> new NotFoundObjectException("Offer with UUID " + id + " not found!"));
 
         model.addAttribute("offer", offerView);
+
+        boolean isOwner = false;
+        if (userDetails != null) {
+            isOwner = offerService.isOwner(userDetails.getUsername(), id);
+        }
+        model.addAttribute("isOwnerAdmin", isOwner);
 
         return "details";
     }
@@ -97,6 +104,7 @@ public class OfferController {
     }
 
     //UPDATE
+    @PreAuthorize("isOwner(#id)")
     @GetMapping("/{id}/edit")
     public String updateOffer(@PathVariable Long id, Model model) {
 
@@ -107,12 +115,14 @@ public class OfferController {
         return "update";
     }
 
+    @PreAuthorize("isOwner(#id)")
     @GetMapping("/{id}/edit/errors")
     public String updateOfferErrors(@PathVariable Long id, Model model) {
         model.addAttribute("bad_credentials", true);
         return "update";
     }
 
+    @PreAuthorize("isOwner(#id)")
     @PatchMapping("/{id}/edit")
     public String updateOffer(@PathVariable Long id,
                               @Valid OfferUpdateOrAddBindingModel offerModel,

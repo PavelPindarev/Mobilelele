@@ -32,7 +32,8 @@
                                 th:each="model : ${brand.models}"
                                 th:text="${model.name}"
                                 th:value="${model.id}"
-                                th:selected="*{id} == ${model.id}">Model
+                                th:selected="*{id} == ${model.id}">
+                            Model
                         </option>
                     </optgroup>
                 </select>
@@ -47,8 +48,6 @@
                        type="number"
                        th:field="*{price}"
                        th:errorclass="is-invalid"
-                       min="0"
-                       step="100"
                        class="form-control"
                        placeholder="Suggested price"/>
                 <p class="invalid-feedback errors alert alert-danger">
@@ -123,7 +122,6 @@
                        type="number"
                        th:field="*{mileage}"
                        th:errorclass="is-invalid"
-                       step="1000"
                        class="form-control"
                        placeholder="Mileage in kilometers"
                 />

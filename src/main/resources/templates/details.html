@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="fragments/navbar::head"></head>
 
@@ -32,7 +33,8 @@
                 </li>
             </ul>
 
-            <div class="card-body">
+            <div th:if="${isOwnerAdmin}"
+                    class="card-body">
                 <form
                         th:action="@{/offers/{id}(id=*{id})}"
                         th:method="delete"
