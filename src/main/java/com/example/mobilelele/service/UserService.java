@@ -16,4 +16,6 @@ public interface UserService {
     void initializeUsersAndRoles();
 
     boolean passwordsCheck(UserLoginBindingModel userLoginDTO);
+
+    void createUserIfNotExist(String userEmail);
 }

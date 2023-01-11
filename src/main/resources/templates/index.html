@@ -13,7 +13,7 @@
        <th:block th:text="#{registration_welcome}"></th:block>
         <span
                 sec:authorize="isAuthenticated()"
-                th:text="${#authentication.principal.fullName}">
+                th:text="${#authentication.principal.getFullName()}">
         </span>
 
         <span sec:authorize="isAnonymous()">

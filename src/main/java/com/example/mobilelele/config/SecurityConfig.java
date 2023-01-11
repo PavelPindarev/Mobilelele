@@ -1,12 +1,13 @@
 package com.example.mobilelele.config;
 
 import com.example.mobilelele.repository.UserRepository;
-import com.example.mobilelele.service.MobileleUserDetailsService;
+import com.example.mobilelele.service.impl.MobileleUserDetailsService;
+import com.example.mobilelele.service.impl.OAuthSuccessHandler;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,17 +20,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new Pbkdf2PasswordEncoder();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           OAuthSuccessHandler oAuthSuccessHandler) throws Exception {
         http.
                 // define which requests are allowed and which not
                         authorizeRequests().
@@ -37,8 +34,8 @@ public class SecurityConfig {
                         requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll().
                 // everyone can login and register
                         antMatchers("/", "/users/login", "/users/register").permitAll().
-                        antMatchers("/offers/add").authenticated().
-                        antMatchers("/offers/**", "/brands/**").permitAll().
+                antMatchers("/offers/add").authenticated().
+                antMatchers("/offers/**", "/brands/**").permitAll().
                 // all other pages are available for logger in users
                         anyRequest().
                 authenticated().
@@ -64,11 +61,17 @@ public class SecurityConfig {
                         logoutSuccessUrl("/").
                 // invalidate the session and delete the cookies
                         invalidateHttpSession(true).
-                deleteCookies("JSESSIONID");
+                    deleteCookies("JSESSIONID").
+                and().
+                // allow oauth login
+                        oauth2Login().
+                loginPage("/users/login").
+                successHandler(oAuthSuccessHandler);
 
         return http.build();
     }
 
+    @Primary
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return new MobileleUserDetailsService(userRepository);

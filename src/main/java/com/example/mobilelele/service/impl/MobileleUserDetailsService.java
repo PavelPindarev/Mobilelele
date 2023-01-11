@@ -1,4 +1,4 @@
-package com.example.mobilelele.service;
+package com.example.mobilelele.service.impl;
 
 import com.example.mobilelele.model.entity.User;
 import com.example.mobilelele.model.entity.UserRole;

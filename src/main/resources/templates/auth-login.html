@@ -10,6 +10,13 @@
 
 <div class="container">
     <h2 class="text-center text-white" th:text="#{navbar_login}">Login</h2>
+    <p>
+        <a th:href="@{/oauth2/authorization/facebook}"
+           class="btn btn-block btn-outline-primary">
+            <i class="fab fa-facebook-f"></i>
+            Login via facebook
+        </a>
+    </p>
     <form th:method="post"
           th:action="@{/users/login}"
           class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">

@@ -40,14 +40,13 @@ public class UserServiceImpl implements UserService {
                            UserRepository userRepository,
                            UserRoleRepository userRoleRepository,
                            UserDetailsService userDetailsService,
-                           PasswordEncoder passwordEncoder,
-                           ModelMapper mapper) {
+                           PasswordEncoder passwordEncoder) {
         this.emailService = emailService;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
-        this.mapper = mapper;
+        this.mapper = new ModelMapper();
     }
 
     //    AUTHENTICATIONS
@@ -101,6 +100,24 @@ public class UserServiceImpl implements UserService {
         User user = optUser.get();
 
         return passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword());
+    }
+
+    @Override
+    public void createUserIfNotExist(String userEmail) {
+        var optUser = userRepository.findByEmail(userEmail);
+
+        if (optUser.isEmpty()) {
+
+            User newUser = new User()
+                    .setEmail(userEmail)
+                    .setPassword(passwordEncoder.encode("test"))
+                    .setFirstName("New")
+                    .setLastName("User")
+                    .setRoles(Set.of());
+
+            userRepository.save(newUser);
+        }
+
     }
 
 

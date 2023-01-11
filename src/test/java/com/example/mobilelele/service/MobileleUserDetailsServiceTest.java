@@ -5,6 +5,7 @@ import com.example.mobilelele.model.entity.UserRole;
 import com.example.mobilelele.model.enums.RoleType;
 import com.example.mobilelele.model.userdetails.MobileleUserDetails;
 import com.example.mobilelele.repository.UserRepository;
+import com.example.mobilelele.service.impl.MobileleUserDetailsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
