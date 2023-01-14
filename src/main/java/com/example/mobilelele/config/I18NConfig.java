@@ -1,4 +1,4 @@
-package com.example.mobilelele.config;
+ package com.example.mobilelele.config;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

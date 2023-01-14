@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "16"
+sourceCompatibility = "17"
 
 repositories {
     mavenCentral()
@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    implementation 'org.modelmapper:modelmapper:3.1.0'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
 
     implementation "org.springframework.boot:spring-boot-starter-mail"
@@ -22,14 +23,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.modelmapper:modelmapper:3.1.0'
-    implementation 'org.springframework.security:spring-security-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.security:spring-security-oauth2-client'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'mysql:mysql-connector-java'
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'com.icegreen:greenmail:1.6.9'
@@ -39,4 +40,3 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
-targetCompatibility = JavaVersion.VERSION_16
