@@ -14,3 +14,11 @@ mail:
   port: 1025
   username: "mobilele@mobilele.com"
   password: "topsecret"
+
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: 485873987030267
+            client-secret: 7c3092e893f3a1a93738b66220d3ee02
